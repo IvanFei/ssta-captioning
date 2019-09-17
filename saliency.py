@@ -312,10 +312,6 @@ def make_graph(grid):
     # get unique labels
     vertices = np.unique(grid)
 
-    # map unique labels to [1,...,num_labels]
-    reverse_dict = dict(zip(vertices, np.arange(len(vertices))))
-    grid = np.array([reverse_dict[x] for x in grid.flat]).reshape(grid.shape)
-
     # create edges
     down = np.c_[grid[:-1, :].ravel(), grid[1:, :].ravel()]
     right = np.c_[grid[:, :-1].ravel(), grid[:, 1:].ravel()]
@@ -354,6 +350,13 @@ def get_saliency_rbd(img):
 
     segments_slic = slic(img_rgb, n_segments=250, compactness=10,
                          sigma=1, enforce_connectivity=False)
+
+    # fix the IndexError by discontinuity of segments_slic
+    vertices = np.unique(segments_slic)
+    reverse_dict = dict(zip(vertices, np.arange(len(vertices))))
+    for i in range(segments_slic.shape[0]):
+        for j in range(segments_slic.shape[1]):
+            segments_slic[i, j] = reverse_dict[segments_slic[i, j]]
 
     num_segments = len(np.unique(segments_slic))
 
@@ -524,3 +527,4 @@ def binarise_saliency_map(saliency_map, method='adaptive', threshold=0.5):
     else:
         print("Method must be one of fixed, adaptive or clustering")
         return None
+

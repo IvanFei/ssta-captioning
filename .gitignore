@@ -14,7 +14,7 @@ logs*/
 *.pyc
 *.npy
 *.pth
-
+.idea
 # LaTeX
 *.pdf
 *.aux
