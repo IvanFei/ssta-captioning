@@ -351,7 +351,7 @@ def get_saliency_rbd(img):
     segments_slic = slic(img_rgb, n_segments=250, compactness=10,
                          sigma=1, enforce_connectivity=False)
 
-    # fix the IndexError by discontinuity of segments_slic
+    # fix the IndexError caused by discontinuity of segments_slic
     vertices = np.unique(segments_slic)
     reverse_dict = dict(zip(vertices, np.arange(len(vertices))))
     for i in range(segments_slic.shape[0]):
